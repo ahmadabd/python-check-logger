@@ -60,132 +60,53 @@ def makeColumns():
     del data[:]
 
 
-def addStar41():
-    # Puts * for columns that dont have data after one minute from last column in column41
+def addStar(column):
+    # Puts * for columns that dont have data after one minute from last column
 
-    dataTime = column41[0][2].split(" ")[1]
+    dataTime = column[0][2].split(" ")[1]
     tmp = int(dataTime.split(":")[1])
 
-    column41S = column41[:]
+    columnS = column[:]
 
-    for i in column41S:
+    for i in columnS:
 
         dataTime = i[2].split(" ")[1]
         minutes = int(dataTime.split(":")[1])
 
         if abs(tmp - minutes) > 1:
-            column41S.insert(column41S.index(i), ['*', '*', '*'])
+            columnS.insert(columnS.index(i), ['*', '*', '*'])
 
         tmp = minutes
 
-    return column41S
+    return columnS
 
 
-def addStar70():
-    # Puts * for columns that dont have data after one minute from last column in column70
+def showData(column, mac):
+    # Shows data of each mac address in a column
 
-    dataTime = column70[0][2].split(" ")[1]
-    tmp = int(dataTime.split(":")[1])
+    c = 0
+    print("             mac : {0}".format(mac))
+    print("------------------------------------")
+    for i in column:
+        print(str(c) + ") " + i[0] + "  " + i[1] + "  " + i[2])
+        c += 1
 
-    column70S = column70[:]
-
-    for i in column70S:
-
-        dataTime = i[2].split(" ")[1]
-        minutes = int(dataTime.split(":")[1])
-
-        if abs(tmp - minutes) > 1:
-            column70S.insert(column70S.index(i), ['*', '*', '*'])
-
-        tmp = minutes
-
-    return column70S
-
-
-def addStar52():
-    # Puts * for columns that dont have data after one minute from last column in column52
-
-    dataTime = column52[0][2].split(" ")[1]
-    tmp = int(dataTime.split(":")[1])
-
-    column52S = column52[:]
-
-    for i in column52S:
-
-        dataTime = i[2].split(" ")[1]
-        minutes = int(dataTime.split(":")[1])
-
-        if abs(tmp - minutes) > 1:
-            column52S.insert(column52S.index(i), ['*', '*', '*'])
-
-        tmp = minutes
-
-    return column52S
-
-
-def addStar53():
-    # Puts * for columns that dont have data after one minute from last column in column53
-
-    dataTime = column53[0][2].split(" ")[1]
-    tmp = int(dataTime.split(":")[1])
-
-    column53S = column53[:]
-
-    for i in column53S:
-
-        dataTime = i[2].split(" ")[1]
-        minutes = int(dataTime.split(":")[1])
-
-        if abs(tmp - minutes) > 1:
-            column53S.insert(column53S.index(i), ['*', '*', '*'])
-
-        tmp = minutes
-
-    return column53S
+    print("***************************************")
 
 
 def showColumns():
     # Gets arranged data and shows them in columns for each mac address
 
     makeColumns()
-    column41S = addStar41()
-    column70S = addStar70()
-    column52S = addStar52()
-    column53S = addStar53()
+    column41S = addStar(column41)
+    column70S = addStar(column70)
+    column52S = addStar(column52)
+    column53S = addStar(column53)
 
-    c = 0
-    print("             mac : 41")
-    print("------------------------------------")
-    for i in column41S:
-        print(str(c) + ") " + i[0] + "  " + i[1] + "  " + i[2])
-        c += 1
-
-    print("***************************************\n")
-
-    c = 0
-    print("             mac : 70")
-    print("------------------------------------")
-    for i in column70S:
-        print(str(c) + ") " + i[0] + "  " + i[1] + "  " + i[2])
-        c += 1
-
-    print("***************************************\n")
-
-    c = 0
-    print("             mac : 52")
-    print("------------------------------------")
-    for i in column52S:
-        print(str(c) + ") " + i[0] + "  " + i[1] + "  " + i[2])
-        c += 1
-
-    print("***************************************\n")
-
-    c = 0
-    print("             mac : 53")
-    print("------------------------------------")
-    for i in column53S:
-        print(str(c) + ") " + i[0] + "  " + i[1] + "  " + i[2])
-        c += 1
+    showData(column41S, 41)
+    showData(column70S, 70)
+    showData(column52S, 52)
+    showData(column53S, 53)
 
     # Deletes extra data from RAM
     del column41S[:]
@@ -196,10 +117,29 @@ def showColumns():
     plotData()
 
 
+def getRangeOfPlot(column):
+    # Gets range of X and Y from user and makes them for each mac addresses logs
+
+    Y = []
+    fromRow = int(input("From: "))
+    toRow = int(input("To: "))
+
+    if fromRow >= 0 and toRow < len(column41):
+
+        X = range(fromRow, toRow)
+
+        for i in range(fromRow, toRow):
+            Y.append(column[i][0])
+
+    else:
+        plotData()
+
+    return X, Y
+
+
 def plotData():
     # Draws plot for each mac address
 
-    print("\n")
     exitNum = input("Exit(y/n)? ")
 
     if(exitNum.upper() == 'Y'):
@@ -207,68 +147,23 @@ def plotData():
 
     elif(exitNum.upper() == 'N'):
 
-        Y = []
         columnMacForPlot = input("Enter column mac address: ")
 
         if columnMacForPlot == "41":
 
-            fromRow = int(input("From: "))
-            toRow = int(input("To: "))
-
-            if fromRow >= 0 and toRow < len(column41):
-
-                X = range(fromRow, toRow)
-
-                for i in range(fromRow, toRow):
-                    Y.append(column41[i][0])
-
-            else:
-                plotData()
+            X, Y = getRangeOfPlot(column41)
 
         elif columnMacForPlot == "70":
 
-            fromRow = int(input("From: "))
-            toRow = int(input("To: "))
-
-            if fromRow >= 0 and toRow < len(column70):
-
-                X = range(fromRow, toRow)
-
-                for i in range(fromRow, toRow):
-                    Y.append(column70[i][0])
-
-            else:
-                plotData()
+            X, Y = getRangeOfPlot(column70)
 
         elif columnMacForPlot == "52":
 
-            fromRow = int(input("From: "))
-            toRow = int(input("To: "))
-
-            if fromRow >= 0 and toRow < len(column52):
-
-                X = range(fromRow, toRow)
-
-                for i in range(fromRow, toRow):
-                    Y.append(column52[i][0])
-
-            else:
-                plotData()
+            X, Y = getRangeOfPlot(column52)
 
         elif columnMacForPlot == "53":
 
-            fromRow = int(input("From: "))
-            toRow = int(input("To: "))
-
-            if fromRow >= 0 and toRow < len(column53):
-
-                X = range(fromRow, toRow)
-
-                for i in range(fromRow, toRow):
-                    Y.append(column53[i][0])
-
-            else:
-                plotData()
+            X, Y = getRangeOfPlot(column53)
 
         else:
             plotData()
