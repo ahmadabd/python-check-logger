@@ -11,7 +11,7 @@ column53 = []
 
 
 def removeExtraData():
-    # Removes bad data from logs and puts [macAddress, tempreture, moisture, epocTime] on data list
+    # Removes destroied data from logs and puts [macAddress, tempreture, moisture, epocTime] on data list
 
     try:
         file = open("DATALOG.TXT", "r")
